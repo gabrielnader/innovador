@@ -1,0 +1,79 @@
+input,
+textarea,
+select {
+  border: 1px solid black;
+  display: block;
+  width: 100%;
+  margin: 8px;
+  padding: 4px;
+  line-height: 1rem;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+input#resp {
+  width: 10%;
+  display: inherit;
+}
+
+table {
+  width: 100%;
+}
+
+tr,
+td,
+th {
+  border: 1px solid black;
+  text-align: center;
+  padding: 8px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid;
+}
+
+header img {
+  width: 120px;
+}
+
+nav,
+li {
+  display: flex;
+  align-content: flex-end;
+}
+
+nav a {
+  align-self: center;
+  margin: 0 16px;
+  text-decoration: none;
+  color: black;
+}
+
+main {
+  margin-top: 16px;
+  margin-bottom: 48px;
+}
+
+form {
+  display: inline-block;
+  width: 100%;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: lightgray;
+  padding: 12px;
+}
+
+.container {
+  padding-right: 32px;
+  padding-left: 32px;
+  margin-right: auto;
+  margin-left: auto;
+}
