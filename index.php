@@ -1,7 +1,7 @@
 <?php
 require_once 'conn/conn.php';
 include 'components/header.php';
-$sql = "SELECT * FROM medicos ORDER BY name";
+$sql = "SELECT * FROM medicos";
 $result = $conn->query($sql);
 $rows = $result->fetchAll();
 
@@ -10,9 +10,9 @@ $rows = $result->fetchAll();
     <form action="conn/insert.php" method="post">
         <input type="text" name="name" placeholder="NOME" required>
         <input type="date" name="birth" placeholder="DATA" required>
-        <input type="text" name="cpf" placeholder="CPF" data-mask="000.000.000-00" required>
+        <input type="text" name="cpf" placeholder="CPF" value="12312312312" data-mask="000.000.000-00" required>
         <input type="mail" name="mail" placeholder="E-MAIL">
-        <input type="text" class="celphones" name="phone1" placeholder="TELEFONE" required>
+        <input type="text" class="celphones" name="phone1" value="12341243" placeholder="TELEFONE" required>
         <input type="text" class="celphones" name="phone2" placeholder="CELULAR">
         <input type="text" name="address" placeholder="ENDEREÇO" required>
         <input type="text" name="complement" placeholder="COMPLEMENTO">
@@ -47,13 +47,18 @@ $rows = $result->fetchAll();
             <option value="SE">Sergipe</option>
             <option value="TO">Tocantins</option>
         </select>
-        <input type="text" name="zip" data-mask="00000-000" placeholder="CEP">
+        <input type="text" name="zip" value="12332123" data-mask="00000-000" placeholder="CEP">
         <input type="text" name="indication" placeholder="INDICAÇÃO">
         <div class="doctors">
             <hr>
             <?php
                 foreach ($rows as $value) {
-                    echo "<div class='doctor'><label for='$value[name]'>$value[name]</label><input type='checkbox' name='$value[id]' id='$value[name]'></div><hr>";
+                    echo "
+                        <div class='doctor'>
+                            <label for='$value[id]'>$value[name]</label>
+                            <input type='checkbox' name='doctors[]' value='$value[id]' id='$value[id]'>
+                        </div>
+                        <hr>";
                 }
             ?>
         </div>

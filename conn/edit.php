@@ -20,7 +20,6 @@ $phone1 = unmask($phone1);
 $phone2 = (isset($_POST['phone2'])) ? $_POST['phone2'] : null;
 $phone2 = unmask($phone2);
 $obs = (isset($_POST['obs'])) ? $_POST['obs'] : null;
-$doctor = (isset($_POST['doctor'])) ? $_POST['doctor'] : null;
 $indication = (isset($_POST['indication'])) ? $_POST['indication'] : null;
 $respMail = (isset($_POST['resp-mail'])) ? $_POST['resp-mail'] : null;
 $respPhone = (isset($_POST['resp-phone'])) ? $_POST['resp-phone'] : null;
@@ -29,40 +28,52 @@ $respName = (isset($_POST['resp-name'])) ? $_POST['resp-name'] : null;
 $resp = (isset($_POST['resp'])) ? 1 : 0;
 $active = $_POST['active'];
 
+$doctors = $_POST['doctors'];
+
 try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
+
     $stmt = $conn->prepare('UPDATE pacientes SET cpf = :cpf, name = :name, birth = :birth, email = :email, address = :address, region = :region, complement = :complement, city = :city, state = :state, zip = :zip, phone_primary = :phone_primary, phone_secondary = :phone_secondary, observations = :observations, doctor = :doctor, indication = :indication, resp_email = :resp_email, resp_phone = :resp_phone, resp_name = :resp_name, resp_primary = :resp_primary WHERE id = :id');
     $stmt->execute(array(
-    ':cpf' => $cpf,
-    ':name' => $name,
-    ':birth' => $birth,
-    ':email' => $mail,
-    ':address' => $address,
-    ':region' => $region,
-    ':complement' => $complement, 
-    ':city' => $city, 
-    ':state' => $state, 
-    ':zip' => $zip, 
-    ':phone_primary' => $phone1, 
-    ':phone_secondary' => $phone2, 
-    ':observations' => $obs, 
-    ':doctor' => $doctor, 
-    ':indication' => $indication, 
-    ':resp_email' => $respMail, 
-    ':resp_phone' => $respPhone, 
-    ':resp_name' => $respName, 
-    ':resp_primary' => $resp,
-    ':id' => $id
-  ));
-     
-  echo 'Deu'; 
-  if($active==1){
-    header("Location: ../pacientes.php");
-  }else{
-    header("Location: ../inativos.php");
-  }
-  die();
-} catch(PDOException $e) {
-  echo 'Error: ' . $e->getMessage();
+        ':cpf' => $cpf,
+        ':name' => $name,
+        ':birth' => $birth,
+        ':email' => $mail,
+        ':address' => $address,
+        ':region' => $region,
+        ':complement' => $complement,
+        ':city' => $city,
+        ':state' => $state,
+        ':zip' => $zip,
+        ':phone_primary' => $phone1,
+        ':phone_secondary' => $phone2,
+        ':observations' => $obs,
+        ':indication' => $indication,
+        ':resp_email' => $respMail,
+        ':resp_phone' => $respPhone,
+        ':resp_name' => $respName,
+        ':resp_primary' => $resp,
+        ':id' => $id,
+    ));
+
+    $paciente_id = $id;
+
+    foreach ($doctors as $value) {
+        $stmt = $conn->prepare('UPDATE relacao SET medico_id = :medico_id, paciente_id = :paciente_id WHERE id = :id');
+        $stmt->execute(array(
+            ':medico_id' => $value,
+            ':paciente_id' => $paciente_id,
+            ':id' => $rel_id
+        ));
+    }
+
+    echo 'Deu';
+    if ($active == 1) {
+        header("Location: ../pacientes.php");
+    } else {
+        header("Location: ../inativos.php");
+    }
+    die();
+} catch (PDOException $e) {
+    echo 'Error: ' . $e->getMessage();
 }

@@ -19,7 +19,6 @@ $phone1 = unmask($phone1);
 $phone2 = (isset($_POST['phone2'])) ? $_POST['phone2'] : null;
 $phone2 = unmask($phone2);
 $obs = (isset($_POST['obs'])) ? $_POST['obs'] : null;
-$doctor = (isset($_POST['doctor'])) ? $_POST['doctor'] : null;
 $indication = (isset($_POST['indication'])) ? $_POST['indication'] : null;
 $respMail = (isset($_POST['resp-mail'])) ? $_POST['resp-mail'] : null;
 $respPhone = (isset($_POST['resp-phone'])) ? $_POST['resp-phone'] : null;
@@ -28,35 +27,45 @@ $respName = (isset($_POST['resp-name'])) ? $_POST['resp-name'] : null;
 $resp = (isset($_POST['resp'])) ? 1 : 0;
 $active = 1;
 
+$doctors = $_POST['doctors'];
+
 try {
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-   
-  $stmt = $conn->prepare('INSERT INTO pacientes (cpf, name, birth, email, address, region, complement, city, state, zip, phone_primary, phone_secondary, observations, doctor, indication, resp_email, resp_phone, resp_name, resp_primary, active) VALUES(:cpf, :name, :birth, :email, :address, :region, :complement, :city, :state, :zip, :phone_primary, :phone_secondary, :observations, :doctor, :indication, :resp_email, :resp_phone, :resp_name, :resp_primary, :active)');
-  $stmt->execute(array(
-    ':cpf' => $cpf,
-    ':name' => $name,
-    ':birth' => $birth,
-    ':email' => $mail,
-    ':address' => $address,
-    ':region' => $region,
-    ':complement' => $complement, 
-    ':city' => $city, 
-    ':state' => $state, 
-    ':zip' => $zip, 
-    ':phone_primary' => $phone1, 
-    ':phone_secondary' => $phone2, 
-    ':observations' => $obs, 
-    ':doctor' => $doctor, 
-    ':indication' => $indication, 
-    ':resp_email' => $respMail, 
-    ':resp_phone' => $respPhone, 
-    ':resp_name' => $respName, 
-    ':resp_primary' => $resp,
-    ':active' => $active
-  ));
-   
-  echo 'Paciente ' . $name . ' cadastrado com sucesso!'; 
-  header('Location: ../index.php');
-} catch(PDOException $e) {
-  echo 'Error: ' . $e->getMessage();
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $conn->prepare('INSERT INTO pacientes (cpf, name, birth, email, address, region, complement, city, state, zip, phone_primary, phone_secondary, observations, doctor, indication, resp_email, resp_phone, resp_name, resp_primary, active) VALUES(:cpf, :name, :birth, :email, :address, :region, :complement, :city, :state, :zip, :phone_primary, :phone_secondary, :observations, :doctor, :indication, :resp_email, :resp_phone, :resp_name, :resp_primary, :active)');
+    $stmt->execute(array(
+        ':cpf' => $cpf,
+        ':name' => $name,
+        ':birth' => $birth,
+        ':email' => $mail,
+        ':address' => $address,
+        ':region' => $region,
+        ':complement' => $complement,
+        ':city' => $city,
+        ':state' => $state,
+        ':zip' => $zip,
+        ':phone_primary' => $phone1,
+        ':phone_secondary' => $phone2,
+        ':observations' => $obs,
+        ':indication' => $indication,
+        ':resp_email' => $respMail,
+        ':resp_phone' => $respPhone,
+        ':resp_name' => $respName,
+        ':resp_primary' => $resp,
+        ':active' => $active,
+    ));
+
+    $paciente_id = $conn->lastInsertId();
+
+    foreach ($doctors as $value) {
+        $stmt = $conn->prepare('INSERT INTO relacao (medico_id, paciente_id) VALUES (:medico_id, :paciente_id)');
+        $stmt->execute(array(
+          ':medico_id' => $value,
+          ':paciente_id' => $paciente_id
+        ));
+    }
+
+    header('Location: ../index.php');
+} catch (PDOException $e) {
+    echo 'Error: ' . $e->getMessage();
 }

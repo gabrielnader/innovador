@@ -3,8 +3,32 @@ include 'components/header.php';
 require_once 'conn/conn.php';
 
 $id = $_POST['id'];
+
+// SELECT DOCS
+$sql = "SELECT * FROM medicos ORDER BY name";
+$result = $conn->query($sql);
+$rows = $result->fetchAll();
+
+// SELECT PACIENTES
 $consulta = $conn->query("SELECT * FROM pacientes WHERE id=" . $id . ";");
 $paciente = $consulta->fetch(PDO::FETCH_ASSOC);
+
+// INNER JOIN RELACAO
+$sql_doc = 'select p.id "Paciente", m.id "Medico", r.id "Relacao"
+            from relacao r
+            INNER JOIN pacientes p ON r.paciente_id = p.id
+            INNER JOIN medicos m ON r.medico_id = m.id
+            WHERE p.id = ' . $id;
+$result_doc = $conn->query($sql_doc);
+$doctors = $result_doc->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($doctors as $doctor) {
+    if ($doctor[Medico] == $value[id]) {
+        echo 'checked';
+    }
+    print_r($doctor[Relacao] . '<br>');
+}
+
 ?>
 <div class="container">
     <form action="conn/edit.php" method="post">
@@ -19,44 +43,61 @@ $paciente = $consulta->fetch(PDO::FETCH_ASSOC);
         <input type="text" name="region" value="<?=$paciente[region]?>" require>
         <input type="text" name="city" value="<?=$paciente[city]?>" require>
         <select name="state" required>
-            <option value="AC" <?=$paciente[state] == "AC" ? "selected" : null; ?>>Acre</option>
-            <option value="AL" <?=$paciente[state] == "AL" ? "selected" : null; ?>>Alagoas</option>
-            <option value="AP" <?=$paciente[state] == "AP" ? "selected" : null; ?>>Amapá</option>
-            <option value="AM" <?=$paciente[state] == "AM" ? "selected" : null; ?>>Amazonas</option>
-            <option value="BA" <?=$paciente[state] == "BA" ? "selected" : null; ?>>Bahia</option>
-            <option value="CE" <?=$paciente[state] == "CE" ? "selected" : null; ?>>Ceará</option>
-            <option value="DF" <?=$paciente[state] == "DF" ? "selected" : null; ?>>Distrito Federal</option>
-            <option value="ES" <?=$paciente[state] == "ES" ? "selected" : null; ?>>Espírito Santo</option>
-            <option value="GO" <?=$paciente[state] == "GO" ? "selected" : null; ?>>Goiás</option>
-            <option value="MA" <?=$paciente[state] == "MA" ? "selected" : null; ?>>Maranhão</option>
-            <option value="MT" <?=$paciente[state] == "MT" ? "selected" : null; ?>>Mato Grosso</option>
-            <option value="MS" <?=$paciente[state] == "MS" ? "selected" : null; ?>>Mato Grosso do Sul</option>
-            <option value="MG" <?=$paciente[state] == "MG" ? "selected" : null; ?>>Minas Gerais</option>
-            <option value="PA" <?=$paciente[state] == "PA" ? "selected" : null; ?>>Pará</option>
-            <option value="PB" <?=$paciente[state] == "PB" ? "selected" : null; ?>>Paraíba</option>
-            <option value="PR" <?=$paciente[state] == "PR" ? "selected" : null; ?>>Paraná</option>
-            <option value="PE" <?=$paciente[state] == "PE" ? "selected" : null; ?>>Pernambuco</option>
-            <option value="PI" <?=$paciente[state] == "PI" ? "selected" : null; ?>>Piauí</option>
-            <option value="RJ" <?=$paciente[state] == "RJ" ? "selected" : null; ?>>Rio de Janeiro</option>
-            <option value="RN" <?=$paciente[state] == "RN" ? "selected" : null; ?>>Rio Grande do Norte</option>
-            <option value="RS" <?=$paciente[state] == "RS" ? "selected" : null; ?>>Rio Grande do Sul</option>
-            <option value="RO" <?=$paciente[state] == "RO" ? "selected" : null; ?>>Rondônia</option>
-            <option value="RR" <?=$paciente[state] == "RR" ? "selected" : null; ?>>Roraima</option>
-            <option value="SC" <?=$paciente[state] == "SC" ? "selected" : null; ?>>Santa Catarina</option>
-            <option value="SP" <?=$paciente[state] == "SP" ? "selected" : null; ?>>São Paulo</option>
-            <option value="SE" <?=$paciente[state] == "SE" ? "selected" : null; ?>>Sergipe</option>
-            <option value="TO" <?=$paciente[state] == "TO" ? "selected" : null; ?>>Tocantins</option>
+            <option value="AC" <?=$paciente[state] == "AC" ? "selected" : null;?>>Acre</option>
+            <option value="AL" <?=$paciente[state] == "AL" ? "selected" : null;?>>Alagoas</option>
+            <option value="AP" <?=$paciente[state] == "AP" ? "selected" : null;?>>Amapá</option>
+            <option value="AM" <?=$paciente[state] == "AM" ? "selected" : null;?>>Amazonas</option>
+            <option value="BA" <?=$paciente[state] == "BA" ? "selected" : null;?>>Bahia</option>
+            <option value="CE" <?=$paciente[state] == "CE" ? "selected" : null;?>>Ceará</option>
+            <option value="DF" <?=$paciente[state] == "DF" ? "selected" : null;?>>Distrito Federal</option>
+            <option value="ES" <?=$paciente[state] == "ES" ? "selected" : null;?>>Espírito Santo</option>
+            <option value="GO" <?=$paciente[state] == "GO" ? "selected" : null;?>>Goiás</option>
+            <option value="MA" <?=$paciente[state] == "MA" ? "selected" : null;?>>Maranhão</option>
+            <option value="MT" <?=$paciente[state] == "MT" ? "selected" : null;?>>Mato Grosso</option>
+            <option value="MS" <?=$paciente[state] == "MS" ? "selected" : null;?>>Mato Grosso do Sul</option>
+            <option value="MG" <?=$paciente[state] == "MG" ? "selected" : null;?>>Minas Gerais</option>
+            <option value="PA" <?=$paciente[state] == "PA" ? "selected" : null;?>>Pará</option>
+            <option value="PB" <?=$paciente[state] == "PB" ? "selected" : null;?>>Paraíba</option>
+            <option value="PR" <?=$paciente[state] == "PR" ? "selected" : null;?>>Paraná</option>
+            <option value="PE" <?=$paciente[state] == "PE" ? "selected" : null;?>>Pernambuco</option>
+            <option value="PI" <?=$paciente[state] == "PI" ? "selected" : null;?>>Piauí</option>
+            <option value="RJ" <?=$paciente[state] == "RJ" ? "selected" : null;?>>Rio de Janeiro</option>
+            <option value="RN" <?=$paciente[state] == "RN" ? "selected" : null;?>>Rio Grande do Norte</option>
+            <option value="RS" <?=$paciente[state] == "RS" ? "selected" : null;?>>Rio Grande do Sul</option>
+            <option value="RO" <?=$paciente[state] == "RO" ? "selected" : null;?>>Rondônia</option>
+            <option value="RR" <?=$paciente[state] == "RR" ? "selected" : null;?>>Roraima</option>
+            <option value="SC" <?=$paciente[state] == "SC" ? "selected" : null;?>>Santa Catarina</option>
+            <option value="SP" <?=$paciente[state] == "SP" ? "selected" : null;?>>São Paulo</option>
+            <option value="SE" <?=$paciente[state] == "SE" ? "selected" : null;?>>Sergipe</option>
+            <option value="TO" <?=$paciente[state] == "TO" ? "selected" : null;?>>Tocantins</option>
         </select>
+        <div class="doctors">
+        <hr>
+            <?php
+                foreach ($rows as $value) {
+                    ?>
+                        <div class='doctor'>
+                            <label for='<?=$value[id]?>'><?=$value[name]?></label>
+                            <input type='checkbox' name='doctors[]' value='<?=$value[id]?>' id='<?=$value[id]?>'
+                            <?php
+                        foreach($doctors as $doctor){
+                                foreach($doctor as $mid){
+                                    if($mid == $value[id]){
+                                        echo 'checked';
+                                    }
+                                }
+                            }
+    ?>
+                            >
+                            <input type="hidden" name="rel_id" value="">
+                        </div>
+                        <hr>
+                    <?php
+}
+?>
+        </div>
         <input type="text" name="zip" data-mask="00000-000" value="<?=$paciente[zip]?>">
         <input type="text" name="indication" value="<?=$paciente[indication]?>">
-        <select name="doctor" require>
-            <option value="" disable>Selecione o médico</option>
-            <option value="1" <?=$paciente[doctor] == 'José Rogério C. Nader' ? 'selected' : null;?>>José Rogério C. Nader</option>
-            <option value="2" <?=$paciente[doctor] == 'Jaime Olavo' ? 'selected' : null;?>>Jaime Olavo</option>
-            <option value="3" <?=$paciente[doctor] == 'Fábio Eugênio Bezerra' ? 'selected' : null;?>>Fábio Eugênio Bezerra</option>
-            <option value="4" <?=$paciente[doctor] == 'Thaís B. Bueno' ? 'selected' : null;?>>Thaís B. Bueno</option>
-            <option value="5" <?=$paciente[doctor] == 'Camila P. Basso' ? 'selected' : null;?>>Camila P. Basso</option>
-        </select>
         <input type="text" name="resp-name" value="<?=$paciente[resp_name]?>">
         <input type="text" class="celphones" name="resp-phone" value="<?=$paciente[resp_phone]?>">
         <input type="mail" name="resp-mail" value="<?=$paciente[resp_email]?>">
@@ -68,7 +109,7 @@ $paciente = $consulta->fetch(PDO::FETCH_ASSOC);
     </form>
     <form action="conn/de-activate.php" method="post">
         <input type="hidden" name="id" value="<?=$paciente[id]?>">
-        <input type="submit" name="<?=$paciente[active]==1 ? 'desativar' : 'ativar'?>" value="<?=$paciente[active]==1 ? 'Desativar' : 'Ativar'?>">
+        <input type="submit" name="<?=$paciente[active] == 1 ? 'desativar' : 'ativar'?>" value="<?=$paciente[active] == 1 ? 'Desativar' : 'Ativar'?>">
     </form>
 </div>
 
