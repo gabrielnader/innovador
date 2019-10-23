@@ -79,7 +79,7 @@ foreach ($doctors as $doctor) {
                         <div class='doctor'>
                             <label for='<?=$value[id]?>'><?=$value[name]?></label>
                             <input type='checkbox' name='doctors[]' value='<?=$value[id]?>' id='<?=$value[id]?>'
-                            <?php
+                    <?php
                         foreach($doctors as $doctor){
                                 foreach($doctor as $mid){
                                     if($mid == $value[id]){
@@ -87,7 +87,7 @@ foreach ($doctors as $doctor) {
                                     }
                                 }
                             }
-    ?>
+                    ?>
                             >
                             <input type="hidden" name="rel_id" value="">
                         </div>
