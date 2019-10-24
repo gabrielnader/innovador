@@ -27,12 +27,12 @@ $respName = (isset($_POST['resp-name'])) ? $_POST['resp-name'] : null;
 $resp = (isset($_POST['resp'])) ? 1 : 0;
 $active = 1;
 
-$doctors = $_POST['doctors'];
+$doctors = (isset($_POST['doctors'])) ? $_POST['doctors'] : null;
 
 try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare('INSERT INTO pacientes (cpf, name, birth, email, address, region, complement, city, state, zip, phone_primary, phone_secondary, observations, doctor, indication, resp_email, resp_phone, resp_name, resp_primary, active) VALUES(:cpf, :name, :birth, :email, :address, :region, :complement, :city, :state, :zip, :phone_primary, :phone_secondary, :observations, :doctor, :indication, :resp_email, :resp_phone, :resp_name, :resp_primary, :active)');
+    $stmt = $conn->prepare('INSERT INTO pacientes (cpf, name, birth, email, address, region, complement, city, state, zip, phone_primary, phone_secondary, observations, indication, resp_email, resp_phone, resp_name, resp_primary, active) VALUES(:cpf, :name, :birth, :email, :address, :region, :complement, :city, :state, :zip, :phone_primary, :phone_secondary, :observations, :indication, :resp_email, :resp_phone, :resp_name, :resp_primary, :active)');
     $stmt->execute(array(
         ':cpf' => $cpf,
         ':name' => $name,

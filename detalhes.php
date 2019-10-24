@@ -22,16 +22,9 @@ $sql_doc = 'select p.id "Paciente", m.id "Medico", r.id "Relacao"
 $result_doc = $conn->query($sql_doc);
 $doctors = $result_doc->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($doctors as $doctor) {
-    if ($doctor[Medico] == $value[id]) {
-        echo 'checked';
-    }
-    print_r($doctor[Relacao] . '<br>');
-}
-
 ?>
 <div class="container">
-    <form action="conn/edit.php" method="post">
+    <form action="conn/edit.php" method="post" onsubmit="return validateDocs();">
         <input type="text" name="name" value="<?=$paciente[name]?>" require>
         <input type="date" name="birth" value="<?=$paciente[birth]?>" require>
         <input type="text" name="cpf" data-mask="000.000.000-00" value="<?=$paciente[cpf]?>" require>
@@ -72,30 +65,39 @@ foreach ($doctors as $doctor) {
             <option value="TO" <?=$paciente[state] == "TO" ? "selected" : null;?>>Tocantins</option>
         </select>
         <div class="doctors">
-        <hr>
+            <hr>
             <?php
-                foreach ($rows as $value) {
-                    ?>
-                        <div class='doctor'>
-                            <label for='<?=$value[id]?>'><?=$value[name]?></label>
-                            <input type='checkbox' name='doctors[]' value='<?=$value[id]?>' id='<?=$value[id]?>'
-                    <?php
-                        foreach($doctors as $doctor){
-                                foreach($doctor as $mid){
-                                    if($mid == $value[id]){
-                                        echo 'checked';
-                                    }
-                                }
-                            }
-                    ?>
-                            >
-                            <input type="hidden" name="rel_id" value="">
-                        </div>
-                        <hr>
-                    <?php
-}
-?>
+                $doc_div;
+                foreach($rows as $value){
+                    foreach ($doctors as $doctor) {
+                        if ($doctor[Medico] == $value[id]) {
+                            $doc_div = 
+                                '
+                                    <hr>
+                                    <div class="doctor">
+                                        <label for="' . $value[id] . '">' . $value[name] . '</label>
+                                        <input type="checkbox" name="doctors[]" value="' . $value[id] . '" id="' . $value[id] . '" checked>
+                                        <input type="hidden" name="rel_id[]" value="' . $doctor[Relacao] . '">
+                                    </div>
+                                ';
+                                break;
+                        } else{
+                            $doc_div =
+                                '
+                                    <hr>
+                                    <div class="doctor">
+                                        <label for="' . $value[id] . '">' . $value[name] . '</label>
+                                        <input type="checkbox" name="doctors[]" value="' . $value[id] . '" id="' . $value[id] . '">
+                                    </div>
+                                ';
+                        }
+                    }
+                    echo $doc_div;
+                }
+            ?>
+            <hr>
         </div>
+        <input type="hidden" name="alldocs" id="alldocs" value="">
         <input type="text" name="zip" data-mask="00000-000" value="<?=$paciente[zip]?>">
         <input type="text" name="indication" value="<?=$paciente[indication]?>">
         <input type="text" name="resp-name" value="<?=$paciente[resp_name]?>">
@@ -113,5 +115,6 @@ foreach ($doctors as $doctor) {
     </form>
 </div>
 
+<script src="js/index.js"></script>
 <?php
 include 'components/footer.php';

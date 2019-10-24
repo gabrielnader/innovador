@@ -28,7 +28,16 @@ $respName = (isset($_POST['resp-name'])) ? $_POST['resp-name'] : null;
 $resp = (isset($_POST['resp'])) ? 1 : 0;
 $active = $_POST['active'];
 
+$relations = $_POST['rel_id'];
 $doctors = $_POST['doctors'];
+$docs_before = $_POST['alldocs'];
+
+$docs_new_arr = [];
+foreach ($doctors as $doc) {
+    array_push($docs_new_arr, $doc);
+}
+$docs_new = implode(',', $docs_new_arr);
+$docs_before_arr = explode(',', $docs_before);
 
 try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -58,16 +67,38 @@ try {
 
     $paciente_id = $id;
 
-    foreach ($doctors as $value) {
-        $stmt = $conn->prepare('UPDATE relacao SET medico_id = :medico_id, paciente_id = :paciente_id WHERE id = :id');
-        $stmt->execute(array(
-            ':medico_id' => $value,
-            ':paciente_id' => $paciente_id,
-            ':id' => $rel_id
-        ));
+    if ($docs_before_arr == $docs_new_arr) {
+        echo 'Nada a mudar aqui';
+    } else {
+        if (array_diff($docs_before_arr, $docs_new_arr)) {
+            foreach (array_diff($docs_before_arr, $docs_new_arr) as $insert_doc) {
+                $inner_join_sql = 'SELECT r.id "Relacao"
+                FROM relacao r
+                INNER JOIN pacientes p ON r.paciente_id = p.id
+                INNER JOIN medicos m ON r.medico_id = m.id
+                WHERE p.id = ' . $id . ' AND m.id = ' . $insert_doc;
+                $inner_join_action = $conn->query($inner_join_sql);
+                $inner_array;
+                while ($row = $inner_join_action->fetch()) {
+                    $inner_array = $row;
+                }
+                $stmt = $conn->prepare('DELETE FROM relacao WHERE id = :id');
+                $stmt->execute(array(
+                    ':id' => $inner_array[Relacao],
+                ));
+            }
+        }
+        if (array_diff($docs_new_arr, $docs_before_arr)) {
+            foreach (array_diff($docs_new_arr, $docs_before_arr) as $insert_doc) {
+                $stmt = $conn->prepare('INSERT INTO relacao (medico_id, paciente_id) VALUES (:medico_id, :paciente_id)');
+                $stmt->execute(array(
+                    ':medico_id' => $insert_doc,
+                    ':paciente_id' => $paciente_id,
+                ));
+            }
+        }
     }
 
-    echo 'Deu';
     if ($active == 1) {
         header("Location: ../pacientes.php");
     } else {

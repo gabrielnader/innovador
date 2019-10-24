@@ -7,12 +7,12 @@ $rows = $result->fetchAll();
 
 ?>
 <div class="container">
-    <form action="conn/insert.php" method="post">
+    <form action="conn/insert.php" method="post" onsubmit="return validateDocs();">
         <input type="text" name="name" placeholder="NOME" required>
         <input type="date" name="birth" placeholder="DATA" required>
-        <input type="text" name="cpf" placeholder="CPF" value="12312312312" data-mask="000.000.000-00" required>
+        <input type="text" name="cpf" placeholder="CPF" data-mask="000.000.000-00" required>
         <input type="mail" name="mail" placeholder="E-MAIL">
-        <input type="text" class="celphones" name="phone1" value="12341243" placeholder="TELEFONE" required>
+        <input type="text" class="celphones" name="phone1" placeholder="TELEFONE" required>
         <input type="text" class="celphones" name="phone2" placeholder="CELULAR">
         <input type="text" name="address" placeholder="ENDEREÇO" required>
         <input type="text" name="complement" placeholder="COMPLEMENTO">
@@ -47,7 +47,7 @@ $rows = $result->fetchAll();
             <option value="SE">Sergipe</option>
             <option value="TO">Tocantins</option>
         </select>
-        <input type="text" name="zip" value="12332123" data-mask="00000-000" placeholder="CEP">
+        <input type="text" name="zip" data-mask="00000-000" placeholder="CEP">
         <input type="text" name="indication" placeholder="INDICAÇÃO">
         <div class="doctors">
             <hr>
@@ -62,14 +62,6 @@ $rows = $result->fetchAll();
                 }
             ?>
         </div>
-        <!-- <select name="doctor" id="" required>
-            <option value="" selected disable>Selecione o médico</option>
-            <option value="1">José Rogério C. Nader</option>
-            <option value="2">Jaime Olavo</option>
-            <option value="3">Fábio Eugênio Bezerra</option>
-            <option value="4">Thaís B. Bueno</option>
-            <option value="5">Camila P. Basso</option>
-        </select> -->
         <input type="text" name="resp-name" placeholder="NOME RESPONSÁVEL">
         <input type="text" class="celphones" name="resp-phone" placeholder="FONE RESPONSÁVEL">
         <input type="mail" name="resp-mail" placeholder="E-MAIL RESPONSÁVEL">
@@ -80,5 +72,6 @@ $rows = $result->fetchAll();
     </form>
 </div>
 
+<script src="js/index.js"></script>
 <?php
 include 'components/footer.php';
