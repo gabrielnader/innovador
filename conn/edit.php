@@ -42,7 +42,7 @@ $docs_before_arr = explode(',', $docs_before);
 try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare('UPDATE pacientes SET cpf = :cpf, name = :name, birth = :birth, email = :email, address = :address, region = :region, complement = :complement, city = :city, state = :state, zip = :zip, phone_primary = :phone_primary, phone_secondary = :phone_secondary, observations = :observations, doctor = :doctor, indication = :indication, resp_email = :resp_email, resp_phone = :resp_phone, resp_name = :resp_name, resp_primary = :resp_primary WHERE id = :id');
+    $stmt = $conn->prepare('UPDATE pacientes SET cpf = :cpf, name = :name, birth = :birth, email = :email, address = :address, region = :region, complement = :complement, city = :city, state = :state, zip = :zip, phone_primary = :phone_primary, phone_secondary = :phone_secondary, observations = :observations, indication = :indication, resp_email = :resp_email, resp_phone = :resp_phone, resp_name = :resp_name, resp_primary = :resp_primary WHERE id = :id');
     $stmt->execute(array(
         ':cpf' => $cpf,
         ':name' => $name,
@@ -68,7 +68,7 @@ try {
     $paciente_id = $id;
 
     if ($docs_before_arr == $docs_new_arr) {
-        echo 'Nada a mudar aqui';
+        echo false;
     } else {
         if (array_diff($docs_before_arr, $docs_new_arr)) {
             foreach (array_diff($docs_before_arr, $docs_new_arr) as $insert_doc) {

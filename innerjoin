@@ -1,4 +1,0 @@
-select p.name "Paciente", m.name "Medico"
-from relacao r
-INNER JOIN pacientes p ON r.paciente_id = p.id 
-INNER JOIN medicos m ON r.medico_id = m.id
